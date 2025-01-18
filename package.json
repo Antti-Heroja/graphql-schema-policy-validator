@@ -1,0 +1,24 @@
+{
+  "name": "graphql-schema-policy-linter",
+  "module": "src/cli.ts",
+  "type": "module",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "lint": "biome check .",
+    "format": "biome format ."
+  },
+  "dependencies": {
+    "@graphql-tools/graphql-file-loader": "^8.0.8",
+    "@graphql-tools/load": "^8.0.9",
+    "biome": "^0.3.3",
+    "commander": "^12.1.0",
+    "fs": "^0.0.1-security",
+    "graphql": "^16.10.0"
+  }
+}

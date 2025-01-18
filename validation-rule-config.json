@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "validateSubscriptionType": true,
+    "validateSubscriptionFields": true,
+    "validateQueryType": true,
+    "validateQueryFields": true,
+    "validateMutationType": true,
+    "validateMutationFields": true,
+    "validateTypeType": true,
+    "validateBasicTypeFields": true
+  }
+}
