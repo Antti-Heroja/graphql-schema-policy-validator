@@ -1,39 +1,133 @@
-type Snack {
-  id: ID!
-  name: String!
-  price: Float!
-}
 
-type SnackKissa {
-  id: ID!
-  name: String!
-}
-
-type HilmaKisu {
-  id: ID!
-  name: String!
-}
-
+# This is the root query type
 type Query {
-  snacks: [Snack!]!
-  snack(id: ID!): Snack
+  # Get a list of all books
+  books: [Book]
+
+  # Get a specific book by its ID
+  book(id: ID!): Book
+
+  # Get a list of all authors
+  authors: [Author]
+
+  # Get a specific author by their ID
+  author(id: ID!): Author
+
+  # Get a list of all publishers
+  publishers: [Publisher]
+
+  # Get a specific publisher by their ID
+  publisher(id: ID!): Publisher
 }
 
-type Mutation {
-  addSnack(name: String!, price: Float!): Snack!
-  updateSnack(id: ID!, name: String, price: Float): Snack!
-  deleteSnack(id: ID!): Boolean!
+# This is the type representing a Book
+type Book {
+  # The unique ID of the book
+  id: ID!
+
+  # The title of the book
+  title: String!
+
+  # The author of the book
+  author: Author!
+
+  # The published year of the book
+  year: Int
+
+  # The genre of the book
+  genre: Genre
+
+  # The publisher of the book
+  publisher: Publisher
+
+  # The reviews for the book
+  reviews: [Review]
 }
 
-type Subscription {
-  snackAdded: Snack!
-  snackUpdated: SnackKissa
-  snackDeleted: ID!
+# This is the type representing an Author
+type Author {
+  # The unique ID of the author
+  id: ID!
+
+  # The name of the author
+  name: String!
+
+  # A list of books written by the author
+  books: [Book]
+
+  # The birth date of the author
+  birthDate: String
+
+  # The biography of the author
+  biography: String
 }
 
-# The schema definition
-schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
+# This is the type representing a Publisher
+type Publisher {
+  # The unique ID of the publisher
+  id: ID!
+
+  # The name of the publisher
+  name: String!
+
+  # A list of books published by this publisher
+  books: [Book]
+
+  # The founding year of the publisher
+  foundedYear: Int
 }
+
+# This is the type representing a Review
+type Review {
+  # The unique ID of the review
+  id: ID!
+
+  # The rating given in the review (1 to 5)
+  rating: Int!
+
+  # The content of the review
+  content: String!
+
+  # The author of the review
+  reviewer: Reviewer!
+
+  # The book this review is associated with
+  book: Book!
+}
+
+# This is the type representing a Reviewer (who can write reviews)
+type Reviewer {
+  # The unique ID of the reviewer
+  id: ID!
+
+  # The name of the reviewer
+  name: String!
+
+  # A list of reviews written by the reviewer
+  reviews: [Review]
+}
+
+# This is the enum type for Book genres
+enum Genre {
+  # Fictional books
+  FICTION
+
+  # Non-fictional books
+  NON_FICTION
+
+  # Fantasy genre books
+  FANTASY
+
+  # Science fiction genre books
+  SCIENCE_FICTION
+
+  # Historical genre books
+  HISTORICAL
+
+  # Mystery genre books
+  MYSTERY
+
+  # Romance genre books
+  ROMANCE
+}
+
