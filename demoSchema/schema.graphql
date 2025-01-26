@@ -1,133 +1,178 @@
-
-# This is the root query type
-type Query {
-  # Get a list of all books
-  books: [Book]
-
-  # Get a specific book by its ID
-  book(id: ID!): Book
-
-  # Get a list of all authors
-  authors: [Author]
-
-  # Get a specific author by their ID
-  author(id: ID!): Author
-
-  # Get a list of all publishers
-  publishers: [Publisher]
-
-  # Get a specific publisher by their ID
-  publisher(id: ID!): Publisher
+# Root type for the schema
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
 }
 
-# This is the type representing a Book
-type Book {
-  # The unique ID of the book
+# Represents a user in the system
+type User {
+  # this is my id
   id: ID!
 
-  # The title of the book
+  # The name of the user
+  name: String!
+
+  # The email address of the user
+  email: String!
+
+  # The timestamp when the user was created
+  createdAt: String!
+
+  # The posts authored by this user
+  posts: [Post!]!
+}
+
+# Represents a post in the system
+type Post {
+  # this is Documentation
+  id: ID!
+
+  # The title of the post
   title: String!
 
-  # The author of the book
-  author: Author!
-
-  # The published year of the book
-  year: Int
-
-  # The genre of the book
-  genre: Genre
-
-  # The publisher of the book
-  publisher: Publisher
-
-  # The reviews for the book
-  reviews: [Review]
-}
-
-# This is the type representing an Author
-type Author {
-  # The unique ID of the author
-  id: ID!
-
-  # The name of the author
-  name: String!
-
-  # A list of books written by the author
-  books: [Book]
-
-  # The birth date of the author
-  birthDate: String
-
-  # The biography of the author
-  biography: String
-}
-
-# This is the type representing a Publisher
-type Publisher {
-  # The unique ID of the publisher
-  id: ID!
-
-  # The name of the publisher
-  name: String!
-
-  # A list of books published by this publisher
-  books: [Book]
-
-  # The founding year of the publisher
-  foundedYear: Int
-}
-
-# This is the type representing a Review
-type Review {
-  # The unique ID of the review
-  id: ID!
-
-  # The rating given in the review (1 to 5)
-  rating: Int!
-
-  # The content of the review
+  # The content of the post
   content: String!
 
-  # The author of the review
-  reviewer: Reviewer!
+  # The timestamp when the post was published
+  publishedAt: String!
 
-  # The book this review is associated with
-  book: Book!
+  # The author of the post
+  author: User!
 }
 
-# This is the type representing a Reviewer (who can write reviews)
-type Reviewer {
-  # The unique ID of the reviewer
-  id: ID!
+# Root Query type that defines all available queries in the API
+type Query {
+  # Fetch a user by their ID
+  user(
+    # The unique identifier of the user
+    id: ID!
+  ): User
 
-  # The name of the reviewer
-  name: String!
+  # Fetch all users in the system
+  users: [User!]!
 
-  # A list of reviews written by the reviewer
-  reviews: [Review]
+  # Fetch a post by its ID
+  post(
+    # The unique identifier of the post
+    id: ID!
+  ): Post
+
+  # Fetch all posts in the system with optional filtering
+  posts(
+    # Optional filter criteria for posts
+    filter: PostFilter
+  ): [Post!]!
 }
 
-# This is the enum type for Book genres
-enum Genre {
-  # Fictional books
-  FICTION
+# Root Mutation type that defines all available mutations in the API
+type Mutation {
+  # Create a new user
+  createUser(
+    # The name of the user
+    name: String!
 
-  # Non-fictional books
-  NON_FICTION
+    # The email of the user
+    email: String!
+  ): User!
 
-  # Fantasy genre books
-  FANTASY
+  # Update an existing user's information
+  updateUser(
+    # The unique identifier of the user to update
+    id: ID!
 
-  # Science fiction genre books
-  SCIENCE_FICTION
+    # The new name of the user
+    name: String
 
-  # Historical genre books
-  HISTORICAL
+    # The new email of the user
+    email: String
+  ): User
 
-  # Mystery genre books
-  MYSTERY
+  # Delete a user by their ID
+  deleteUser(
+    # The unique identifier of the user to delete
+    id: ID!
+  ): Boolean!
 
-  # Romance genre books
-  ROMANCE
+  # Create a new post
+  createPost(
+    # The title of the post
+    title: String!
+
+    # The content of the post
+    content: String!
+
+    # The ID of the user authoring the post
+    authorId: ID!
+  ): Post!
+
+  # Update an existing post
+  updatePost(
+    # The unique identifier of the post to update
+    id: ID!
+
+    # The new title of the post
+    title: String
+
+    # The new content of the post
+    content: String
+  ): Post
+
+  # Delete a post by its ID
+  deletePost(
+    # The unique identifier of the post to delete
+    id: ID!
+  ): Boolean!
 }
 
+# Root Subscription type that defines all available subscriptions in the API
+type Subscription {
+  # Subscribe to new users being created
+  userCreated: User!
+
+  # Subscribe to updates on a specific user
+  userUpdated(
+    # The unique identifier of the user to subscribe to
+    id: ID!
+  ): User!
+
+  # Subscribe to new posts being created
+  postCreated: Post!
+
+  # Subscribe to updates on a specific post
+  postUpdated(
+    # The unique identifier of the post to subscribe to
+    id: ID!
+  ): Post!
+
+  # Subscribe to posts being deleted
+  postDeleted: ID!
+}
+
+# Input type for filtering posts
+input PostFilter {
+  # Filter posts by author ID
+  authorId: ID
+
+  # Filter posts by title containing this string
+  titleContains: String
+
+  # Filter posts by publication date
+  publishedAfter: String
+}
+
+# Custom scalar types
+scalar DateTime
+
+# Enum for post status
+# Represents the current status of a post
+enum PostStatus {
+  # Post is in draft mode
+  DRAFT
+
+  # Post is published and visible to readers
+  PUBLISHED
+
+  # Post is archived and not visible
+  ARCHIVED
+}

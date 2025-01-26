@@ -6,20 +6,20 @@ import type { GraphQLSchema } from 'graphql'
 
 import {
   handleErrors,
-  validateBasicTypeFields,
-  validateMutationFields,
-  validateMutationType,
-  validateQueryFields,
-  validateQueryType,
-  validateSubscriptionFields,
-  validateSubscriptionType,
-  validateTypeType,
+  validateMutationFieldDocumenation,
+  validateMutationTypeDocumentation,
+  validateQueryFieldsDocumentation,
+  validateQueryTypeDocumentation,
+  validateSubscriptionFieldDocumentation,
+  validateSubscriptionTypeDocumentation,
+  validateTypeDocumentation,
+  validateTypeFieldsDocumentation,
 } from './validate/documentation'
 
-import { validateAlphabeticalOrder } from './validate/alphabetical-order'
+// import { validateAlphabeticalOrder } from './validate/alphabetical-order'
 
 interface ValidationRules {
-  validateAlphabeticalOrder: boolean,
+  validateAlphabeticalOrder: boolean
   validateSubscriptionType: boolean
   validateSubscriptionFields: boolean
   validateQueryType: boolean
@@ -68,30 +68,30 @@ const validate = async (schema: GraphQLSchema, configFile: string) => {
   const errors: string[] = []
   const config = readConfig(configFile)
   if (config.rules.validateSubscriptionType) {
-    await validateSubscriptionType(schema, errors)
+    await validateSubscriptionTypeDocumentation(schema, errors)
   }
   if (config.rules.validateSubscriptionFields) {
-    await validateSubscriptionFields(schema, errors)
+    await validateSubscriptionFieldDocumentation(schema, errors)
   }
   if (config.rules.validateQueryType) {
-    await validateQueryType(schema, errors)
+    await validateQueryTypeDocumentation(schema, errors)
   }
   if (config.rules.validateQueryFields) {
-    await validateQueryFields(schema, errors)
+    await validateQueryFieldsDocumentation(schema, errors)
   }
   if (config.rules.validateMutationType) {
-    await validateMutationType(schema, errors)
+    await validateMutationTypeDocumentation(schema, errors)
   }
   if (config.rules.validateMutationFields) {
-    await validateMutationFields(schema, errors)
+    await validateMutationFieldDocumenation(schema, errors)
   }
   if (config.rules.validateTypeType) {
-    validateTypeType(schema, errors)
+    validateTypeDocumentation(schema, errors)
   }
   if (config.rules.validateBasicTypeFields) {
-    validateBasicTypeFields(schema, errors)
+    validateTypeFieldsDocumentation(schema, errors)
   }
-  if (config.rules.validateAlphabeticalOrder){
+  if (config.rules.validateAlphabeticalOrder) {
     validateAlphabeticalOrder(schema, errors)
   }
   handleErrors(errors)

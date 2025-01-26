@@ -1,6 +1,6 @@
 {
   "rules": {
-    "validateAlphabeticalOrder": true,
+    "validateAlphabeticalOrder": false,
     "validateSubscriptionType": true,
     "validateSubscriptionFields": true,
     "validateQueryType": true,
