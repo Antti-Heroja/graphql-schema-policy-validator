@@ -91,9 +91,10 @@ const validate = async (schema: GraphQLSchema, configFile: string) => {
   if (config.rules.validateBasicTypeFields) {
     validateTypeFieldsDocumentation(schema, errors)
   }
-  if (config.rules.validateAlphabeticalOrder) {
-    validateAlphabeticalOrder(schema, errors)
-  }
+  //TODO alphabetical-order implementation
+  // if (config.rules.validateAlphabeticalOrder) {
+  //   validateAlphabeticalOrder(schema, errors)
+  // }
   handleErrors(errors)
 }
 
