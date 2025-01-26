@@ -1,11 +1,9 @@
-import { write } from 'node:console'
 import {
   GraphQLObjectType,
   type GraphQLSchema,
   type InterfaceTypeDefinitionNode,
   type ObjectTypeDefinitionNode,
 } from 'graphql'
-import { isObjectType } from 'graphql'
 
 const validateType = async (
   schema: GraphQLSchema,
