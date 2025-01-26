@@ -1,39 +1,178 @@
-type Snack {
-  id: ID!
-  name: String!
-  price: Float!
-}
-
-type SnackKissa {
-  id: ID!
-  name: String!
-}
-
-type HilmaKisu {
-  id: ID!
-  name: String!
-}
-
-type Query {
-  snacks: [Snack!]!
-  snack(id: ID!): Snack
-}
-
-type Mutation {
-  addSnack(name: String!, price: Float!): Snack!
-  updateSnack(id: ID!, name: String, price: Float): Snack!
-  deleteSnack(id: ID!): Boolean!
-}
-
-type Subscription {
-  snackAdded: Snack!
-  snackUpdated: SnackKissa
-  snackDeleted: ID!
-}
-
-# The schema definition
+# Root type for the schema
 schema {
   query: Query
   mutation: Mutation
   subscription: Subscription
+}
+
+# Represents a user in the system
+type User {
+  # this is my id
+  id: ID!
+
+  # The name of the user
+  name: String!
+
+  # The email address of the user
+  email: String!
+
+  # The timestamp when the user was created
+  createdAt: String!
+
+  # The posts authored by this user
+  posts: [Post!]!
+}
+
+# Represents a post in the system
+type Post {
+  # this is Documentation
+  id: ID!
+
+  # The title of the post
+  title: String!
+
+  # The content of the post
+  content: String!
+
+  # The timestamp when the post was published
+  publishedAt: String!
+
+  # The author of the post
+  author: User!
+}
+
+# Root Query type that defines all available queries in the API
+type Query {
+  # Fetch a user by their ID
+  user(
+    # The unique identifier of the user
+    id: ID!
+  ): User
+
+  # Fetch all users in the system
+  users: [User!]!
+
+  # Fetch a post by its ID
+  post(
+    # The unique identifier of the post
+    id: ID!
+  ): Post
+
+  # Fetch all posts in the system with optional filtering
+  posts(
+    # Optional filter criteria for posts
+    filter: PostFilter
+  ): [Post!]!
+}
+
+# Root Mutation type that defines all available mutations in the API
+type Mutation {
+  # Create a new user
+  createUser(
+    # The name of the user
+    name: String!
+
+    # The email of the user
+    email: String!
+  ): User!
+
+  # Update an existing user's information
+  updateUser(
+    # The unique identifier of the user to update
+    id: ID!
+
+    # The new name of the user
+    name: String
+
+    # The new email of the user
+    email: String
+  ): User
+
+  # Delete a user by their ID
+  deleteUser(
+    # The unique identifier of the user to delete
+    id: ID!
+  ): Boolean!
+
+  # Create a new post
+  createPost(
+    # The title of the post
+    title: String!
+
+    # The content of the post
+    content: String!
+
+    # The ID of the user authoring the post
+    authorId: ID!
+  ): Post!
+
+  # Update an existing post
+  updatePost(
+    # The unique identifier of the post to update
+    id: ID!
+
+    # The new title of the post
+    title: String
+
+    # The new content of the post
+    content: String
+  ): Post
+
+  # Delete a post by its ID
+  deletePost(
+    # The unique identifier of the post to delete
+    id: ID!
+  ): Boolean!
+}
+
+# Root Subscription type that defines all available subscriptions in the API
+type Subscription {
+  # Subscribe to new users being created
+  userCreated: User!
+
+  # Subscribe to updates on a specific user
+  userUpdated(
+    # The unique identifier of the user to subscribe to
+    id: ID!
+  ): User!
+
+  # Subscribe to new posts being created
+  postCreated: Post!
+
+  # Subscribe to updates on a specific post
+  postUpdated(
+    # The unique identifier of the post to subscribe to
+    id: ID!
+  ): Post!
+
+  # Subscribe to posts being deleted
+  postDeleted: ID!
+}
+
+# Input type for filtering posts
+input PostFilter {
+  # Filter posts by author ID
+  authorId: ID
+
+  # Filter posts by title containing this string
+  titleContains: String
+
+  # Filter posts by publication date
+  publishedAfter: String
+}
+
+# Custom scalar types
+scalar DateTime
+
+# Enum for post status
+# Represents the current status of a post
+enum PostStatus {
+  # Post is in draft mode
+  DRAFT
+
+  # Post is published and visible to readers
+  PUBLISHED
+
+  # Post is archived and not visible
+  ARCHIVED
 }

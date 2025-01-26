@@ -1,4 +1,10 @@
-import type { GraphQLObjectType, GraphQLSchema } from 'graphql'
+import { write } from 'node:console'
+import {
+  GraphQLObjectType,
+  type GraphQLSchema,
+  type InterfaceTypeDefinitionNode,
+  type ObjectTypeDefinitionNode,
+} from 'graphql'
 import { isObjectType } from 'graphql'
 
 const validateType = async (
@@ -16,7 +22,11 @@ const validateType = async (
   if (!typeNode) {
     const rowNumber =
       schema[`get${type}Type`]?.()?.astNode?.name?.loc?.startToken?.prev?.line
-    errors.push(`Type: ${type} is missing description from row → ${rowNumber}`)
+    if (rowNumber) {
+      errors.push(
+        `Type: ${type} is missing description from row → ${rowNumber}`,
+      )
+    }
   }
 }
 
@@ -28,7 +38,7 @@ const validateFields = (
 
   for (const fieldName in fields) {
     if (Object.prototype.hasOwnProperty.call(fields, fieldName)) {
-      const fieldNode = fields[fieldName].astNode
+      const fieldNode = fields[fieldName]?.astNode
       const isComment = fieldNode?.name?.loc?.startToken?.prev?.kind
       if (isComment !== 'Comment') {
         const rowNumber = fieldNode?.loc?.startToken?.line
@@ -58,37 +68,43 @@ const validateTypeFields = async (
   validateFields(typeObject, errors)
 }
 
-export const validateSubscriptionType = (
+export const validateSubscriptionTypeDocumentation = (
   schema: GraphQLSchema,
   errors: string[],
 ): Promise<void> => validateType(schema, 'Subscription', errors)
 
-export const validateSubscriptionFields = (
+export const validateSubscriptionFieldDocumentation = (
   schema: GraphQLSchema,
   errors: string[],
 ): Promise<void> => validateTypeFields(schema, 'Subscription', errors)
 
-export const validateQueryType = (
+export const validateQueryTypeDocumentation = (
   schema: GraphQLSchema,
   errors: string[],
 ): Promise<void> => validateType(schema, 'Query', errors)
 
-export const validateQueryFields = (
+export const validateQueryFieldsDocumentation = (
   schema: GraphQLSchema,
   errors: string[],
 ): Promise<void> => validateTypeFields(schema, 'Query', errors)
 
-export const validateMutationType = (
+export const validateMutationTypeDocumentation = (
   schema: GraphQLSchema,
   errors: string[],
 ): Promise<void> => validateType(schema, 'Mutation', errors)
 
-export const validateMutationFields = (
+export const validateMutationFieldDocumenation = (
   schema: GraphQLSchema,
   errors: string[],
 ): Promise<void> => validateTypeFields(schema, 'Mutation', errors)
 
-export const validateTypeType = (schema: GraphQLSchema, errors: string[]) => {
+export const validateTypeDocumentation = (
+  schema: GraphQLSchema,
+  errors: string[],
+) => {
+  console.log(
+    'ℹ️ Validating properties of the GraphQL Type type for the schema...',
+  )
   const typeMap = schema.getTypeMap()
   const userDefinedTypes = Object.values(typeMap).filter((type) => {
     if (
@@ -102,49 +118,56 @@ export const validateTypeType = (schema: GraphQLSchema, errors: string[]) => {
     }
     return false
   })
-
   for (const type of userDefinedTypes) {
-    const typeNode = type.astNode
-    const isComment = typeNode?.name?.loc?.startToken?.prev?.kind
-    if (isComment !== 'Comment') {
-      const rowNumber = typeNode?.loc?.startToken?.line
+    const isComment = type.astNode?.loc?.startToken?.prev?.kind
+    const tokenType = type?.astNode?.loc?.startToken?.value
+    if (tokenType === 'type' && isComment !== 'Comment') {
+      const name = type?.name
+      const rowNumber = type?.astNode?.loc?.startToken?.line
       errors.push(
-        `Type: "${type.name}" is missing description from row → ${rowNumber}`,
+        `Type: "${name}" is missing description from row → ${rowNumber}`,
       )
     }
   }
 }
 
-export const validateBasicTypeFields = (
+export const validateTypeFieldsDocumentation = (
   schema: GraphQLSchema,
   errors: string[],
 ) => {
-  const typeMap = schema.getTypeMap()
-  const customTypeDefs = Object.keys(typeMap).filter(
-    (typeName) =>
-      !typeName.startsWith('__') && // Exclude introspection types
-      ![
-        'String',
-        'ID',
-        'Float',
-        'Boolean',
-        'Query',
-        'Subscription',
-        'Mutation',
-      ].includes(typeName), // Exclude scalars
+  console.log(
+    'ℹ️ Validating properties of the GraphQL Type fields for the schema...',
   )
+  const typeMap = schema.getTypeMap()
 
-  for (const typeName of customTypeDefs) {
-    const type = typeMap[typeName]
-    if (isObjectType(type)) {
-      const fields = type.getFields()
-      for (const fieldName of Object.keys(fields)) {
-        const field = fields[fieldName]
-        if (!field.description) {
-          const rowNumber = field.astNode?.loc?.startToken?.line
-          errors.push(
-            `Field: "${fieldName}" of type "${typeName}" is missing a description from row -> ${rowNumber}`,
-          )
+  const filteredTypes = Object.keys(typeMap).filter(
+    (key) =>
+      typeMap[key] instanceof GraphQLObjectType &&
+      !key.startsWith('__') &&
+      key !== 'Query' &&
+      key !== 'Subscription' &&
+      key !== 'Mutation',
+  )
+  for (const typeName of filteredTypes) {
+    const type = typeMap[typeName]?.astNode
+    if (
+      type &&
+      (type.kind === 'ObjectTypeDefinition' ||
+        type.kind === 'InterfaceTypeDefinition')
+    ) {
+      const fields = (
+        type as ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode
+      ).fields
+      if (fields) {
+        for (const field of fields) {
+          const isComment = field?.name?.loc?.startToken?.prev?.kind
+          if (isComment !== 'Comment') {
+            const fieldName = field.name.value
+            const rowNumber = field?.name?.loc?.startToken?.line
+            errors.push(
+              `Field: "${fieldName}" of type "${typeName}" is missing a description from row -> ${rowNumber}`,
+            )
+          }
         }
       }
     }
