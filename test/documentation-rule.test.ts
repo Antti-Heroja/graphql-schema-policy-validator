@@ -19,7 +19,7 @@ describe('Documentation Tests', () => {
     )
     exec(
       `bun ${cliPath} validate ${schemaPath} ${configPath}`,
-      (error, stdout, stderr) => {
+      (_error, stdout, stderr) => {
         expect(stdout).toContain(`✅ Schema loaded successfully: ${schemaPath}`)
         expect(stderr).toBe('')
         done()
@@ -58,7 +58,7 @@ describe('Documentation Tests', () => {
 `
     exec(
       `bun ${cliPath} validate ${schemaPath} ${configPath}`,
-      (error, stdout, stderr) => {
+      (_error, stdout, stderr) => {
         expect(stdout).toContain(`✅ Schema loaded successfully: ${schemaPath}`)
         expect(stderr).toBe(expectedResult)
         done()

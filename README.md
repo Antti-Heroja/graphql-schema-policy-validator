@@ -47,6 +47,7 @@ Example `validation-rule-config.json`:
 ```json
 {
   "rules": {
+    alphabeticalOrderFields: true, 
     "validateSubscriptionType": true,
     "validateSubscriptionFields": true,
     "validateQueryType": true,
@@ -62,7 +63,7 @@ Example `validation-rule-config.json`:
 ## Supported Rules
 
 The following rules ensure that schema types and fields are properly documented:
-
+- alphabeticalOrderFields: Ensures that all type definition fields are in alphabetical order 
 - `validateSubscriptionType`: Ensures that subscription types are documented.
 - `validateSubscriptionFields`: Ensures that subscription fields are documented.
 - `validateQueryType`: Ensures that query types are documented.

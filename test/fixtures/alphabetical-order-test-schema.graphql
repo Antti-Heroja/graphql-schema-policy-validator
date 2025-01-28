@@ -1,0 +1,9 @@
+type Query {
+  aField: String
+  bField: String
+}
+
+type Mutation {
+  createItem: String
+  updateItem: String
+}
