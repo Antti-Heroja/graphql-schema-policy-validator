@@ -16,10 +16,10 @@ import {
   validateTypeFieldsDocumentation,
 } from './validate/documentation'
 
-// import { validateAlphabeticalOrder } from './validate/alphabetical-order'
+import { validateAlphabeticalOrder } from './validate/alphabetical-order'
 
 interface ValidationRules {
-  validateAlphabeticalOrder: boolean
+  alphabeticalOrderFields: boolean
   validateSubscriptionType: boolean
   validateSubscriptionFields: boolean
   validateQueryType: boolean
@@ -91,10 +91,9 @@ const validate = async (schema: GraphQLSchema, configFile: string) => {
   if (config.rules.validateBasicTypeFields) {
     validateTypeFieldsDocumentation(schema, errors)
   }
-  //TODO alphabetical-order implementation
-  // if (config.rules.validateAlphabeticalOrder) {
-  //   validateAlphabeticalOrder(schema, errors)
-  // }
+  if (config.rules.alphabeticalOrderFields) {
+    validateAlphabeticalOrder(schema, errors)
+  }
   handleErrors(errors)
 }
 
