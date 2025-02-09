@@ -1,9 +1,53 @@
-type Query {
-  aField: String
-  bField: String
+# Root schema definition
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
 }
 
 type Mutation {
-  createItem: String
-  updateItem: String
+  # Adds a new product with a name and price
+  createProduct(name: String!, price: Float!): Product!
+
+  # Creates a new user with a given name and email
+  createUser(name: String!, email: String!): User!
+}
+# Represents a product in the catalog
+type Product {
+  # Unique identifier for the product
+  id: ID!
+
+  # Name of the product
+  name: String!
+
+  # Price of the product in USD
+  price: Float!
+}
+
+type Query {
+  # Fetches a list of all available products
+  products: [Product!]!
+
+  # Retrieves a user by their unique ID
+  user(id: ID!): User
+}
+
+type Subscription {
+  # Notifies when a new product is added
+  productCreated: Product!
+
+  # Notifies when a new user is created
+  userCreated: User!
+}
+
+# Represents a user in the system
+type User {
+  # Email address of the user
+  email: String!
+
+  # Unique identifier for the user
+  id: ID!
+
+  # Full name of the user
+  name: String!
 }

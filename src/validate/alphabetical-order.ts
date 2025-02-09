@@ -1,20 +1,52 @@
 import {
   type GraphQLFieldMap,
+  type GraphQLNamedType,
   type GraphQLObjectType,
   type GraphQLSchema,
   isObjectType,
 } from 'graphql'
 
+import {
+  isIntrospectionType,
+  isScalarType,
+  isSpecifiedScalarType,
+} from 'graphql'
+
+const getUserDefinedTypesSorted = (schema: GraphQLSchema) => {
+  return Object.values(schema.getTypeMap())
+    .filter((type) => !isBuiltInType(type) && !isIntrospectionType(type))
+    .map((type) => type.name)
+}
+
+const isBuiltInType = (type: GraphQLNamedType): boolean => {
+  return isScalarType(type) && isSpecifiedScalarType(type) // Excludes built-in scalars (String, Int, etc.)
+}
+
 export const validateAlphabeticalOrder = (
   schema: GraphQLSchema,
   errors: string[],
 ) => {
-  const typeMap = schema.getTypeMap()
+  const typeNames = getUserDefinedTypesSorted(schema)
+  const sortedTypeNames = [...typeNames].sort()
+  if (!arraysAreEqual(typeNames, sortedTypeNames)) {
+    reportOutOfOrderTypes(typeNames, sortedTypeNames, errors)
+  }
 
-  for (const type of Object.values(typeMap)) {
-    if (!type.name.startsWith('__') && isObjectType(type)) {
+  for (const typeName of typeNames) {
+    const type = schema.getType(typeName)
+    if (isObjectType(type)) {
       validateTypeAlphabeticalOrder(type, errors)
     }
+  }
+}
+
+const reportOutOfOrderTypes = (
+  typeNames: string[],
+  sortedTypeNames: string[],
+  errors: string[],
+) => {
+  for (const typeName of getOutOfOrderFields(typeNames, sortedTypeNames)) {
+    errors.push(`Type "${typeName}" is not in alphabetical order`)
   }
 }
 
