@@ -12,7 +12,7 @@ type BType {
   bAnotherField: String
   # A field of type String
   bField: String
-  # xxx this this 
+  # xxx this this
   xxxte: String
 }
 # Input type for creating an item
@@ -23,11 +23,8 @@ input CreateItemInput {
   description: String
 }
 
-
 # Custom scalar type for special data handling
 scalar CustomScalar
-
-
 
 # Root mutation type for modifying data
 type Mutation {

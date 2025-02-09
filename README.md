@@ -2,10 +2,14 @@
 
 # graphql-schema-policy-validator
 
-The tool is now under initial development. The goal is to provide a CLI tool that validates a GraphQL schema against a set of predefined rules and policies.
+`graphql-schema-policy-validator` is a CLI tool designed for effortless `GraphQL` schema validation. It follows a strict no customization approach, enforcing only universal best practices.
 
-It is crucial to use this tool at the beginning of a GraphQL project. Otherwise, bad practices can lead to significant refactoring of your schema later on. Such changes in the schema will inevitably affect clients, making updates a potentially painful process.
+Design Goals
+✅ Extremely easy to use – Install once, run instantly. No configuration needed.
+🚫 No custom rules – The tool enforces a fixed set of best practices to ensure schema consistency.
+🛠️ Prevents costly refactoring – Use it at the start of a project to avoid structural issues that could impact clients later.
 
+This tool is currently in initial development and aims to be blazingly fast, similar to Biome.
 
 ## Installation
 
@@ -14,14 +18,11 @@ To install the dependencies, run:
 ```bash
 bun install
 ```
+``
+- Validate `./demoSchema` → Replace `./demoSchema` with the path to your own `GraphQL` schema file. Example --> `./path-to-my/schema`
+- `validation-rule-config.json` → This file allows you to select which rules to enable. 
+By default, all rules are enabled.
 
-## Usage
-
-To validate a GraphQL schema against the standard rule set, use the following command:
-
-```bash
-bun run src/cli.ts validate ./demoSchema validation-rule-config.json
-```
 ### Notes
 
 Replace `./demoSchema` and `validation-rule-config.json` with the paths to your actual schema and configuration files if they differ.
@@ -62,8 +63,8 @@ Example `validation-rule-config.json`:
 
 ## Supported Rules
 
-The following rules ensure that schema types and fields are properly documented:
-- alphabeticalOrderFields: Ensures that all type definition fields are in alphabetical order 
+The following rules ensure that schema follows `GraphQL` best practices. 
+- `alphabeticalOrderFields`: Ensures that all type and field definitions are in alphabetical order. 
 - `validateSubscriptionType`: Ensures that subscription types are documented.
 - `validateSubscriptionFields`: Ensures that subscription fields are documented.
 - `validateQueryType`: Ensures that query types are documented.

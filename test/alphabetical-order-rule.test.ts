@@ -1,7 +1,7 @@
+import { beforeAll, describe, expect, it } from 'bun:test'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { type GraphQLSchema, buildSchema } from 'graphql'
-import { beforeAll, describe, expect, it } from 'bun:test'
 import { validateAlphabeticalOrder } from '../src/validate/alphabetical-order.ts'
 
 let schema: GraphQLSchema
@@ -18,7 +18,6 @@ beforeAll(() => {
 describe('validateAlphabeticalOrder', () => {
   it('returns no errors for a schema with types and fields in alphabetical order', () => {
     const errors: string[] = []
-    console.log(schema)
     validateAlphabeticalOrder(schema, errors)
     expect(errors).toEqual([])
   })

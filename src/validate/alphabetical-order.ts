@@ -1,11 +1,16 @@
 import {
   type GraphQLFieldMap,
+  type GraphQLNamedType,
   type GraphQLObjectType,
   type GraphQLSchema,
   isObjectType,
 } from 'graphql'
 
-import { isSpecifiedScalarType, isScalarType, isIntrospectionType } from 'graphql'
+import {
+  isIntrospectionType,
+  isScalarType,
+  isSpecifiedScalarType,
+} from 'graphql'
 
 const getUserDefinedTypesSorted = (schema: GraphQLSchema) => {
   return Object.values(schema.getTypeMap())
@@ -13,7 +18,7 @@ const getUserDefinedTypesSorted = (schema: GraphQLSchema) => {
     .map((type) => type.name)
 }
 
-const isBuiltInType = (type: any): boolean => {
+const isBuiltInType = (type: GraphQLNamedType): boolean => {
   return isScalarType(type) && isSpecifiedScalarType(type) // Excludes built-in scalars (String, Int, etc.)
 }
 
@@ -86,7 +91,8 @@ const addFieldError = (
   if (field) {
     const line = field.astNode?.loc?.startToken?.line
     errors.push(
-      `Field "${fieldName}" in type "${typeName}" is not in alphabetical order${line ? ` --> line ${line}` : ''
+      `Field "${fieldName}" in type "${typeName}" is not in alphabetical order${
+        line ? ` --> line ${line}` : ''
       }`,
     )
   } else {

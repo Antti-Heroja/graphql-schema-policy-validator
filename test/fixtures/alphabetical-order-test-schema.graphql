@@ -24,7 +24,6 @@ type Product {
   price: Float!
 }
 
-
 type Query {
   # Fetches a list of all available products
   products: [Product!]!
