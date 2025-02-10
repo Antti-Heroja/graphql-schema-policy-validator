@@ -48,7 +48,7 @@ Example `validation-rule-config.json`:
 ```json
 {
   "rules": {
-    alphabeticalOrderFields: true, 
+    "alphabeticalOrderField": true, 
     "validateSubscriptionType": true,
     "validateSubscriptionFields": true,
     "validateQueryType": true,
@@ -75,5 +75,40 @@ The following rules ensure that schema follows `GraphQL` best practices.
 - `validateBasicTypeFields`: Ensures that basic type fields are documented.
 
 ## Contributing
+
+
+### Commit Message Guidelines
+
+This project enforces a strict commit message format to maintain consistency and readability.
+
+### **Commit Message Format**
+Each commit message must follow this structure:
+
+```
+type(scope): message
+```
+
+Where:
+- `type` must be one of: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`, `ci`, `build`, `revert`
+- `scope` is **required** and should be a relevant topic or ticket number (e.g., `auth`, `TICKET-123`)
+- `message` should be a short, descriptive summary of the changes
+
+### **Examples**
+✅ Valid commit messages:
+```
+feat(auth): add login API
+fix(TICKET-456): resolve GraphQL error
+chore(deps): update dependencies
+```
+
+❌ Invalid commit messages:
+```
+feat: add login API  # Missing scope
+fix(Auth): Fix issue  # Wrong casing in scope
+fix(ticket-123): bug fix  # Non-descriptive message
+```
+
+### **Commit Hook Enforcement**
+A Git commit hook is used to validate commit messages before they are accepted.
 
 Contributions to the `graphql-schema-policy-validator` are welcome! Feel free to submit issues, feature requests, or pull requests to help improve the project.
