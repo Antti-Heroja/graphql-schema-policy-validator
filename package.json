@@ -4,14 +4,16 @@
   "type": "module",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "husky": "^9.1.7"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "scripts": {
     "lint": "biome check .",
-    "format": "biome format ."
+    "format": "biome format .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@graphql-tools/graphql-file-loader": "^8.0.8",
