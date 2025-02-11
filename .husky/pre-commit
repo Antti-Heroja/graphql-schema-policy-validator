@@ -1,1 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run Biome check (lint + format check)
+bun biome check .
+
+# Run tests
 bun test
