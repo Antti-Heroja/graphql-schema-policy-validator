@@ -10,10 +10,6 @@ const validateType = async (
   type: 'Subscription' | 'Query' | 'Mutation',
   errors: string[],
 ): Promise<void> => {
-  console.log(
-    `ℹ️ Validating properties of the GraphQL ${type} type for the schema...`,
-  )
-
   const typeNode =
     schema[`get${type}Type`]?.()?.astNode?.name?.loc?.startToken?.prev?.prev
       ?.value
@@ -53,10 +49,6 @@ const validateTypeFields = async (
   type: 'Subscription' | 'Query' | 'Mutation',
   errors: string[],
 ): Promise<void> => {
-  console.log(
-    `ℹ️ Validating properties of the GraphQL ${type} fields for the schema...`,
-  )
-
   const typeObject = schema[`get${type}Type`]?.()
   if (!typeObject) {
     console.log(`${type} type fields are not defined in the schema.`)
@@ -100,9 +92,6 @@ export const validateTypeDocumentation = (
   schema: GraphQLSchema,
   errors: string[],
 ) => {
-  console.log(
-    'ℹ️ Validating properties of the GraphQL Type type for the schema...',
-  )
   const typeMap = schema.getTypeMap()
   const userDefinedTypes = Object.values(typeMap).filter((type) => {
     if (
@@ -133,9 +122,6 @@ export const validateTypeFieldsDocumentation = (
   schema: GraphQLSchema,
   errors: string[],
 ) => {
-  console.log(
-    'ℹ️ Validating properties of the GraphQL Type fields for the schema...',
-  )
   const typeMap = schema.getTypeMap()
 
   const filteredTypes = Object.keys(typeMap).filter(

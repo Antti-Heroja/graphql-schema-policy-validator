@@ -67,3 +67,10 @@ input UpdateItemInput {
   # Updated description of the item
   description: String
 }
+
+input XsitemInput {
+  # this is somehitng
+  id: ID
+  # this is something else
+  car: String
+}

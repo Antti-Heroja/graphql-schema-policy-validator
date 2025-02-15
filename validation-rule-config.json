@@ -1,6 +1,7 @@
 {
   "rules": {
     "alphabeticalOrderFields": true,
+    "inputSuffix": true,
     "validateSubscriptionType": true,
     "validateSubscriptionFields": true,
     "validateQueryType": true,

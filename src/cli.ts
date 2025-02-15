@@ -17,9 +17,10 @@ import {
 } from './validate/documentation'
 
 import { validateAlphabeticalOrder } from './validate/alphabetical-order'
-
+import { inputSuffixValidate } from './validate/input-suffix'
 interface ValidationRules {
   alphabeticalOrderFields: boolean
+  inputSuffix: boolean
   validateSubscriptionType: boolean
   validateSubscriptionFields: boolean
   validateQueryType: boolean
@@ -67,33 +68,77 @@ const readConfig = (filePath: string): { rules: ValidationRules } => {
 const validate = async (schema: GraphQLSchema, configFile: string) => {
   const errors: string[] = []
   const config = readConfig(configFile)
+
   if (config.rules.validateSubscriptionType) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring Subscription type is documented ...',
+    )
     await validateSubscriptionTypeDocumentation(schema, errors)
   }
+
   if (config.rules.validateSubscriptionFields) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring all Subscription fields are documented ...',
+    )
     await validateSubscriptionFieldDocumentation(schema, errors)
   }
+
   if (config.rules.validateQueryType) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring Query type is documented ...',
+    )
     await validateQueryTypeDocumentation(schema, errors)
   }
+
   if (config.rules.validateQueryFields) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring all Query fields are documented ...',
+    )
     await validateQueryFieldsDocumentation(schema, errors)
   }
+
   if (config.rules.validateMutationType) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring Mutation type is documented ...',
+    )
     await validateMutationTypeDocumentation(schema, errors)
   }
+
   if (config.rules.validateMutationFields) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring all Mutation fields are documented ...',
+    )
     await validateMutationFieldDocumenation(schema, errors)
   }
+
   if (config.rules.validateTypeType) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring all custom types are documented ...',
+    )
     validateTypeDocumentation(schema, errors)
   }
+
   if (config.rules.validateBasicTypeFields) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring all fields of basic types are documented ...',
+    )
     validateTypeFieldsDocumentation(schema, errors)
   }
+
   if (config.rules.alphabeticalOrderFields) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring fields are in alphabetical order ...',
+    )
     validateAlphabeticalOrder(schema, errors)
   }
+
+  if (config.rules.inputSuffix) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring all `input` types have the "Input" suffix ...',
+    )
+    inputSuffixValidate(schema, errors)
+  }
+
   handleErrors(errors)
 }
 
