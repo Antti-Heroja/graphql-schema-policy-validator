@@ -18,15 +18,17 @@ To install the dependencies, run:
 ```bash
 bun install
 ```
+
 ``
+
 - Validate `./demoSchema` → Replace `./demoSchema` with the path to your own `GraphQL` schema file. Example --> `./path-to-my/schema`
-- `validation-rule-config.json` → This file allows you to select which rules to enable. 
+- `validation-rule-config.json` → This file allows you to select which rules to enable.
 By default, all rules are enabled.
 
 ### Notes
 
 Replace `./demoSchema` and `validation-rule-config.json` with the paths to your actual schema and configuration files if they differ.
-The `validation-rule-config.json` file should contain your predefined rule set, which the CLI tool will use to validate the schema. The file is validated through the interface so all rules much always be defined. 
+The `validation-rule-config.json` file should contain your predefined rule set, which the CLI tool will use to validate the schema. The file is validated through the interface so all rules much always be defined.
 
 ### Arguments
 
@@ -48,7 +50,9 @@ Example `validation-rule-config.json`:
 ```json
 {
   "rules": {
-    "alphabeticalOrderField": true, 
+    "alphabeticalOrderFields": true,
+    "inputSuffix": true,
+    "namingConvention": true,
     "validateSubscriptionType": true,
     "validateSubscriptionFields": true,
     "validateQueryType": true,
@@ -63,8 +67,11 @@ Example `validation-rule-config.json`:
 
 ## Supported Rules
 
-The following rules ensure that schema follows `GraphQL` best practices. 
-- `alphabeticalOrderFields`: Ensures that all type and field definitions are in alphabetical order. 
+The following rules ensure that the schema follows `GraphQL` best practices.
+
+- `alphabeticalOrderFields`: Ensures that all type and field definitions are in alphabetical order.
+- `inputSuffix`: Ensures that all input types have the `Input` suffix.
+- `namingConvention`: Enforces consistent naming conventions for types, fields, and arguments.
 - `validateSubscriptionType`: Ensures that subscription types are documented.
 - `validateSubscriptionFields`: Ensures that subscription fields are documented.
 - `validateQueryType`: Ensures that query types are documented.
@@ -74,14 +81,40 @@ The following rules ensure that schema follows `GraphQL` best practices.
 - `validateTypeType`: Ensures that custom types are documented.
 - `validateBasicTypeFields`: Ensures that basic type fields are documented.
 
-## Contributing
+## Naming Conventions Validation
 
+The following functions ensure that GraphQL naming conventions are followed:
+
+| Function       | Allowed ✅                     | Not Allowed ❌                          |
+|--------------|------------------------------|--------------------------------------|
+| `isPascalCase` | `UserProfile`, `GraphQLType`  | `userProfile`, `_User`, `user_profile` |
+| `isCamelCase`  | `userProfile`, `orderHistory` | `UserProfile`, `_userProfile`, `user_profile` |
+| `isUpperCase`  | `PENDING`, `ORDER_STATUS`     | `Pending`, `order_status`, `PENDING-ORDER` |
+
+### Explanation
+
+- **`isPascalCase(name: string)`**  Ensures that the name starts with an uppercase letter and contains only letters and numbers.  
+  ✅ **Valid:** `UserProfile`  
+  ❌ **Invalid:** `userProfile`, `_User`, `user_profile`  
+
+- **`isCamelCase(name: string)`**  
+  Ensures that the name starts with a lowercase letter and contains only letters and numbers.  
+  ✅ **Valid:** `userProfile`  
+  ❌ **Invalid:** `UserProfile`, `_userProfile`, `user_profile`  
+
+- **`isUpperCase(name: string)`**  
+  Ensures that the name consists of only uppercase letters, numbers, and underscores.  
+  ✅ **Valid:** `PENDING`, `ORDER_STATUS`  
+  ❌ **Invalid:** `Pending`, `order_status`, `PENDING-ORDER`  
+
+## Contributing
 
 ### Commit Message Guidelines
 
 This project enforces a strict commit message format to maintain consistency and readability.
 
 ### **Commit Message Format**
+
 Each commit message must follow this structure:
 
 ```
@@ -89,12 +122,15 @@ type(scope): message
 ```
 
 Where:
+
 - `type` must be one of: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`, `ci`, `build`, `revert`
 - `scope` is **required** and should be a relevant topic or ticket number (e.g., `auth`, `TICKET-123`)
 - `message` should be a short, descriptive summary of the changes
 
 ### **Examples**
+
 ✅ Valid commit messages:
+
 ```
 feat(auth): add login API
 fix(TICKET-456): resolve GraphQL error
@@ -102,6 +138,7 @@ chore(deps): update dependencies
 ```
 
 ❌ Invalid commit messages:
+
 ```
 feat: add login API  # Missing scope
 fix(Auth): Fix issue  # Wrong casing in scope
@@ -109,6 +146,7 @@ fix(ticket-123): bug fix  # Non-descriptive message
 ```
 
 ### **Commit Hook Enforcement**
+
 A Git commit hook is used to validate commit messages before they are accepted.
 
 Contributions to the `graphql-schema-policy-validator` are welcome! Feel free to submit issues, feature requests, or pull requests to help improve the project.
