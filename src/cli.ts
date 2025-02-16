@@ -18,9 +18,12 @@ import {
 
 import { validateAlphabeticalOrder } from './validate/alphabetical-order'
 import { inputSuffixValidate } from './validate/input-suffix'
+import { namingConventionsValidate } from './validate/naming-convention'
+
 interface ValidationRules {
   alphabeticalOrderFields: boolean
   inputSuffix: boolean
+  namingConvention: boolean
   validateSubscriptionType: boolean
   validateSubscriptionFields: boolean
   validateQueryType: boolean
@@ -139,6 +142,16 @@ const validate = async (schema: GraphQLSchema, configFile: string) => {
     inputSuffixValidate(schema, errors)
   }
 
+  if (config.rules.namingConvention) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring naming conventions are followed...\n' +
+        '   🔍 Type names should be PascalCase\n' +
+        '   🔍 Enum names should be PascalCase\n' +
+        '   🔍 Enum values should be UPPER_CASE\n' +
+        '   🔍 Field & argument names should be camelCase\n',
+    )
+    namingConventionsValidate(schema, errors)
+  }
   handleErrors(errors)
 }
 

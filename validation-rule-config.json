@@ -2,6 +2,7 @@
   "rules": {
     "alphabeticalOrderFields": true,
     "inputSuffix": true,
+    "namingConvention": true,
     "validateSubscriptionType": true,
     "validateSubscriptionFields": true,
     "validateQueryType": true,
