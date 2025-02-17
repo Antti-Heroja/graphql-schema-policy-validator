@@ -19,11 +19,13 @@ import {
 import { validateAlphabeticalOrder } from './validate/alphabetical-order'
 import { inputSuffixValidate } from './validate/input-suffix'
 import { namingConventionsValidate } from './validate/naming-convention'
+import { uniqueTypeNamesValidate } from './validate/unique-type-names'
 
 interface ValidationRules {
   alphabeticalOrderFields: boolean
   inputSuffix: boolean
   namingConvention: boolean
+  uniqueTypes: boolean
   validateSubscriptionType: boolean
   validateSubscriptionFields: boolean
   validateQueryType: boolean
@@ -151,6 +153,13 @@ const validate = async (schema: GraphQLSchema, configFile: string) => {
         '   🔍 Field & argument names should be camelCase\n',
     )
     namingConventionsValidate(schema, errors)
+  }
+
+  if (config.rules.uniqueTypes) {
+    console.log(
+      '🔍 Checking GraphQL schema: Ensuring all type names are unique...',
+    )
+    uniqueTypeNamesValidate(schema, errors)
   }
   handleErrors(errors)
 }
