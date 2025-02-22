@@ -4,7 +4,10 @@
 
 `graphql-schema-policy-validator` is a CLI tool designed for effortless `GraphQL` schema validation. It follows a strict no customization approach, enforcing only universal best practices.
 
-Design Goals
+This linter validates  `GraphQL` schemas written in Schema Definition Language `SDL`. Unlike code-first approaches that generate schemas dynamically, `SDL`-based schemas are manually written using `.graphql` files. This ensures early detection of issues before the schema is executed, helping enforce best practices and maintain a well-structured GraphQL API.
+
+## Design Goals
+
 ✅ Extremely easy to use – Install once, run instantly. No configuration needed.
 🚫 No custom rules – The tool enforces a fixed set of best practices to ensure schema consistency.
 🛠️ Prevents costly refactoring – Use it at the start of a project to avoid structural issues that could impact clients later.
@@ -40,6 +43,10 @@ The `validation-rule-config.json` file should contain your predefined rule set, 
 The `graphql-schema-policy-validator` is a tool designed to ensure compliance with your project, team, or company's schema policies. It validates GraphQL schemas against predefined rules and throws errors if any violations are detected.
 
 This helps maintain consistency, enforce standards, and ensure adherence to best practices across your GraphQL API development.
+
+## Mandatory Pre-Validation Rules
+
+The tool ensures that there are no duplicate type definitions within the schema. Only one definition per type (e.g., `ObjectTypeDefinition`, `InterfaceTypeDefinition`, `InputObjectTypeDefinition`, `EnumTypeDefinition`, `ScalarTypeDefinition`, or `UnionTypeDefinition``) is allowed across all schema files. While a single schema file can contain multiple type definitions, duplicates of the same type name across different files will trigger an error. This rule is mandatory and cannot be disabled. The tool supports only files with the`.graphql` extension.
 
 ## Supported Rules
 

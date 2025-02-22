@@ -6,7 +6,7 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
-import { namingConventionsValidate } from '../src/validate/naming-convention'
+import { namingConventionsValidate } from '../src/end-user-validate/naming-convention'
 
 describe('namingConventionsValidate', () => {
   it('should pass when all naming conventions are correct', () => {

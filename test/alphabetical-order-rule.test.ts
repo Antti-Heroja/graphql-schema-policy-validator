@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'bun:test'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { type GraphQLSchema, buildSchema } from 'graphql'
-import { validateAlphabeticalOrder } from '../src/validate/alphabetical-order.ts'
+import { validateAlphabeticalOrder } from '../src/end-user-validate/alphabetical-order'
 
 let schema: GraphQLSchema
 

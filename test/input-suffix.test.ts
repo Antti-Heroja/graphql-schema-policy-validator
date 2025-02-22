@@ -4,7 +4,7 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
 } from 'graphql'
-import { inputSuffixValidate } from '../src/validate/input-suffix'
+import { inputSuffixValidate } from '../src/end-user-validate/input-suffix'
 
 describe('Input Suffix Validation', () => {
   test('should pass when all input types have "Input" suffix', () => {
