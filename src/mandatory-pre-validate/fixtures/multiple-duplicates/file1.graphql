@@ -1,0 +1,6 @@
+type User {
+  id: ID!
+}
+interface Post {
+  title: String
+}

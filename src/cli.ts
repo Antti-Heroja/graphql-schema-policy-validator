@@ -14,18 +14,20 @@ import {
   validateSubscriptionTypeDocumentation,
   validateTypeDocumentation,
   validateTypeFieldsDocumentation,
-} from './validate/documentation'
+} from './end-user-validate/documentation'
 
-import { validateAlphabeticalOrder } from './validate/alphabetical-order'
-import { inputSuffixValidate } from './validate/input-suffix'
-import { namingConventionsValidate } from './validate/naming-convention'
-import { uniqueTypeNamesValidate } from './validate/unique-type-names'
+import { validateAlphabeticalOrder } from './end-user-validate/alphabetical-order'
+import { inputSuffixValidate } from './end-user-validate/input-suffix'
+import { namingConventionsValidate } from './end-user-validate/naming-convention'
+/*
+ * Mandatory pre check for the schema files. These rules are always on, because those are so fundamentatl rules.
+ */
+import { checkDuplicateTypeDefinitionsInFolder } from './mandatory-pre-validate/unique-types'
 
 interface ValidationRules {
   alphabeticalOrderFields: boolean
   inputSuffix: boolean
   namingConvention: boolean
-  uniqueTypes: boolean
   validateSubscriptionType: boolean
   validateSubscriptionFields: boolean
   validateQueryType: boolean
@@ -44,6 +46,16 @@ export const validateSchema = async (
     const schema = await loadSchema(schemaPath, {
       loaders: [new GraphQLFileLoader()],
     })
+
+    const errors = await checkDuplicateTypeDefinitionsInFolder(schemaPath)
+    if (errors.length === 0) {
+      console.log('✅ No duplicate type definitions found.')
+    } else {
+      console.log('Linter results:')
+      for (const error of errors) {
+        console.log(error)
+      }
+    }
     console.log(`✅ Schema loaded successfully: ${schemaPath}`)
     await validate(schema, configPath)
   } catch (error) {
@@ -155,12 +167,6 @@ const validate = async (schema: GraphQLSchema, configFile: string) => {
     namingConventionsValidate(schema, errors)
   }
 
-  if (config.rules.uniqueTypes) {
-    console.log(
-      '🔍 Checking GraphQL schema: Ensuring all type names are unique...',
-    )
-    uniqueTypeNamesValidate(schema, errors)
-  }
   handleErrors(errors)
 }
 
