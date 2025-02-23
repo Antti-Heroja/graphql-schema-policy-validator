@@ -27,6 +27,6 @@
     }
   },
   "files": {
-    "ignore": ["fixtures/**"]
+    "ignore": ["fixtures/parse-error/**"]
   }
 }
