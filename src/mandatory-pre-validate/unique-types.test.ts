@@ -1,4 +1,3 @@
-// checkDuplicateTypeDefinitions.test.ts
 import { describe, expect, it } from 'bun:test'
 import * as path from 'node:path'
 import { checkDuplicateTypeDefinitionsInFolder } from './unique-types'
