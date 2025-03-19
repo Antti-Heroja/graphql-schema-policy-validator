@@ -1,0 +1,77 @@
+# Type representing AType with fields in alphabetical order
+type AType {
+  # Another field of type String
+  aAnotherField: String
+  # A field of type String
+  aField: String
+}
+
+# Type representing BType with fields in alphabetical order
+type BType {
+  # Another field of type String
+  bAnotherField: String
+  # A field of type String
+  bField: String
+  # xxx this this
+  xxxte: String
+}
+
+# Input type for creating an item
+input CreateItemInput {
+  # Name of the item
+  name: String
+  # Description of the item
+  description: String
+}
+
+# Custom scalar type for special data handling
+scalar CustomScalar
+
+# Root mutation type for modifying data
+type Mutation {
+  # Creates a new item
+  createItem: String
+  # Updates an existing item
+  updateItem: String
+}
+# Root query type for fetching data
+type Query {
+  # Retrieves fieldA as a String
+  fieldA: String
+  # Retrieves fieldB as a String
+  fieldB: String
+  # Retrieves fieldC as a String
+  fieldC: String
+}
+# Enum representing the status of an item
+enum Status {
+  # Item is active
+  ACTIVE
+  # Item is inactive
+  INACTIVE
+  # Item is pending approval
+  PENDING
+}
+# Root subscription type for real-time updates
+type Subscription {
+  # Notifies when an item is created
+  itemCreated: String
+  # Notifies when an item is updated
+  itemUpdated: String
+}
+# Input type for updating an item
+input UpdateItemInput {
+  # Unique identifier of the item
+  id: ID
+  # Updated name of the item
+  name: String
+  # Updated description of the item
+  description: String
+}
+
+input XsitemInput {
+  # this is somehitng
+  id: ID
+  # this is something else
+  car: String
+}
