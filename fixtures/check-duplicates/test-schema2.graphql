@@ -1,0 +1,22 @@
+# Channel information
+type Channel {
+  # Unique identifier for the channel
+  id: ID!
+  # Channel name
+  name: String!
+}
+
+# Available message types
+enum MessageType {
+  TEXT
+  IMAGE
+  VIDEO
+}
+
+# A message in a channel (DUPLICATE from schema1.graphql)
+type Message {
+  # Unique identifier for the message
+  id: ID!
+  # Message content
+  content: String!
+}

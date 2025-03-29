@@ -70,3 +70,26 @@ test('validates validSchema with all rules enabled (should pass)', () => {
   }
   expect(stderr).toBe('')
 })
+
+// New test for duplicate type detection
+test('detects duplicate types across schema files (should fail)', () => {
+  const schemaPath = `${fixtureBase}/check-duplicates`
+  const configPath = `${fixtureBase}/check-duplicates/test-validation-rule-config.json`
+
+  if (!existsSync(schemaPath)) {
+    throw new Error(`Schema directory not found: ${schemaPath}`)
+  }
+  if (!existsSync(configPath)) {
+    throw new Error(`Config file not found: ${configPath}`)
+  }
+
+  const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
+
+  // Assertions
+  expect(stdout).toContain(
+    '❌ Duplicate type definition found: "Message" appears in files: test-schema1.graphql, test-schema2.graphql',
+  )
+  expect(stdout).toContain('✅ Schema loaded successfully')
+  expect(stderr).toBe('')
+  expect(exitCode).toBe(0) // CLI succeeds even with duplicates
+})

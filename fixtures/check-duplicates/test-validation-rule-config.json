@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "alphabeticalOrderFields": false,
+    "inputSuffix": false,
+    "namingConvention": false,
+    "validateSubscriptionType": false,
+    "validateSubscriptionFields": false,
+    "validateQueryType": false,
+    "validateQueryFields": false,
+    "validateMutationType": false,
+    "validateMutationFields": false,
+    "validateTypeType": false,
+    "validateBasicTypeFields": false
+  }
+}
