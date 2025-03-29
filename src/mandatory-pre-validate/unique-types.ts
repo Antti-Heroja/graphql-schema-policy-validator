@@ -2,7 +2,7 @@ import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
 import { type DocumentNode, parse } from 'graphql'
 
-export const checkDuplicateTypeDefinitionsInFolder = async (
+export const checkThatEverythingIsUnique = async (
   folderPath: string,
 ): Promise<string[]> => {
   const errors: string[] = []
