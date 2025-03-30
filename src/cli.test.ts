@@ -1,25 +1,19 @@
 import { expect, test } from 'bun:test'
-import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { spawnSync } from 'bun'
+
+const FIXTURE_BASE = resolve(__dirname, '..', 'fixtures')
 
 const runCLI = (
   args: string[],
 ): { stdout: string; stderr: string; exitCode: number } => {
   const cliPath = resolve(__dirname, 'cli.ts')
-  console.log('CLI Path:', cliPath)
-  console.log('Args:', ['bun', 'run', cliPath, 'validate', ...args])
 
   const result = spawnSync(['bun', 'run', cliPath, 'validate', ...args], {
     stdout: 'pipe',
     stderr: 'pipe',
     env: { ...process.env },
   })
-
-  console.log('Exit Code:', result.exitCode)
-  console.log('Stdout:', result.stdout.toString())
-  console.log('Stderr:', result.stderr.toString())
-
   return {
     stdout: result.stdout.toString(),
     stderr: result.stderr.toString(),
@@ -27,26 +21,13 @@ const runCLI = (
   }
 }
 
-const fixtureBase = resolve(__dirname, '..', 'fixtures')
-
 test('validates validSchema with all rules enabled (should pass)', () => {
-  const schemaPath = `${fixtureBase}/full-valid-schema`
-  const configPath = `${fixtureBase}/full-valid-schema/test-validation-rule-config.json`
-
-  if (!existsSync(schemaPath)) {
-    throw new Error(`Schema file not found: ${schemaPath}`)
-  }
-  if (!existsSync(configPath)) {
-    throw new Error(`Config file not found: ${configPath}`)
-  }
-
-  console.log('Schema Path:', schemaPath)
-  console.log('Config Path:', configPath)
+  const schemaPath = `${FIXTURE_BASE}/full-valid-schema`
+  const configPath = `${FIXTURE_BASE}/full-valid-schema/test-validation-rule-config.json`
 
   const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
 
   const expectedLogs = [
-    // '✅ Pre schema validation passed.',
     `✅ Schema loaded successfully: ${schemaPath}`,
     '🔍 Checking GraphQL schema: Ensuring Subscription type is documented ...',
     '🔍 Checking GraphQL schema: Ensuring all Subscription fields are documented ...',
@@ -71,25 +52,16 @@ test('validates validSchema with all rules enabled (should pass)', () => {
   expect(stderr).toBe('')
 })
 
-// New test for duplicate type detection
 test('detects duplicate types across schema files (should fail)', () => {
-  const schemaPath = `${fixtureBase}/check-duplicates`
-  const configPath = `${fixtureBase}/check-duplicates/test-validation-rule-config.json`
-
-  if (!existsSync(schemaPath)) {
-    throw new Error(`Schema directory not found: ${schemaPath}`)
-  }
-  if (!existsSync(configPath)) {
-    throw new Error(`Config file not found: ${configPath}`)
-  }
+  const schemaPath = `${FIXTURE_BASE}/check-duplicates`
+  const configPath = `${FIXTURE_BASE}/check-duplicates/test-validation-rule-config.json`
 
   const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
 
-  // Assertions
   expect(stdout).toContain(
     '❌ Duplicate type definition found: "Message" appears in files: test-schema1.graphql, test-schema2.graphql',
   )
   expect(stdout).toContain('✅ Schema loaded successfully')
   expect(stderr).toBe('')
-  expect(exitCode).toBe(0) // CLI succeeds even with duplicates
+  expect(exitCode).toBe(0)
 })
