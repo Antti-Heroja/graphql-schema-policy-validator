@@ -22,7 +22,7 @@ import { namingConventionsValidate } from './end-user-validate/naming-convention
 /*
  * Mandatory pre check for the schema files. These rules are always on, because those are so fundamentatl rules.
  */
-import { checkThatEverythingIsUnique } from './mandatory-pre-validate/unique-types'
+import { preValidateGraphQLFolder } from './pre-validate'
 
 interface ValidationRules {
   alphabeticalOrderFields: boolean
@@ -47,16 +47,13 @@ export const validateSchema = async (
       loaders: [new GraphQLFileLoader()],
     })
 
-    const errors = await checkThatEverythingIsUnique(schemaPath)
-    console.log('cli.ts', errors)
-    if (errors.length === 0) {
-      console.log('✅ No duplicate type definitions found.')
-    } else {
-      console.log('Linter results:')
+    const errors = await preValidateGraphQLFolder(schemaPath)
+    if (errors.length > 0) {
       for (const error of errors) {
         console.log(error)
       }
     }
+
     console.log(`✅ Schema loaded successfully: ${schemaPath}`)
     await validate(schema, configPath)
   } catch (error) {
