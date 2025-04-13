@@ -54,14 +54,28 @@ test('validates validSchema with all rules enabled (should pass)', () => {
 
 test('detects duplicate types across schema files (should fail)', () => {
   const schemaPath = `${FIXTURE_BASE}/check-duplicates`
-  const configPath = `${FIXTURE_BASE}/check-duplicates/test-validation-rule-config.json`
+  const configPath = `${FIXTURE_BASE}/test-validation-rule-config.json`
 
   const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
 
-  expect(stdout).toContain(
+  expect(stderr).toContain(
     '❌ Duplicate type definition found: "Message" appears in files: test-schema1.graphql, test-schema2.graphql',
   )
   expect(stdout).toContain('✅ Schema loaded successfully')
-  expect(stderr).toBe('')
+  expect(stdout).toContain('✅ Documentation validation passed')
+  expect(exitCode).toBe(0)
+})
+
+test('detects empty files across schema files (should fail)', () => {
+  const schemaPath = `${FIXTURE_BASE}/check-empty-files`
+  const configPath = `${FIXTURE_BASE}/test-validation-rule-config.json`
+
+  const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
+
+  expect(stderr).toContain(
+    '❌ Failed to parse empty-file2.graphql: Syntax Error: Unexpected <EOF>.',
+  )
+  expect(stdout).toContain('✅ Schema loaded successfully')
+  expect(stdout).toContain('✅ Documentation validation passed')
   expect(exitCode).toBe(0)
 })

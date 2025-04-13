@@ -1,3 +1,4 @@
+import { checkEmptyFiles } from './mandatory-pre-validate/check-empty-files.ts'
 import { checkThatEverythingIsUnique } from './mandatory-pre-validate/unique-types.ts'
 
 export const preValidateGraphQLFolder = async (
@@ -7,6 +8,7 @@ export const preValidateGraphQLFolder = async (
 
   const [uniqueErrors] = await Promise.all([
     checkThatEverythingIsUnique(folderPath),
+    checkEmptyFiles(folderPath),
   ])
 
   errors.push(...uniqueErrors)

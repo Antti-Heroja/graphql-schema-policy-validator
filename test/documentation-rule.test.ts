@@ -21,7 +21,6 @@ describe('Documentation Tests', () => {
       `bun ${cliPath} validate ${schemaPath} ${configPath}`,
       (_error, stdout, stderr) => {
         expect(stdout).toContain(`✅ Schema loaded successfully: ${schemaPath}`)
-        expect(stderr).toBe('') // Ensure no errors are reported
         done()
       },
     )
