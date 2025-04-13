@@ -19,9 +19,6 @@ import {
 import { validateAlphabeticalOrder } from './end-user-validate/alphabetical-order'
 import { inputSuffixValidate } from './end-user-validate/input-suffix'
 import { namingConventionsValidate } from './end-user-validate/naming-convention'
-/*
- * Mandatory pre check for the schema files. These rules are always on, because those are so fundamentatl rules.
- */
 import { preValidateGraphQLFolder } from './pre-validate'
 
 interface ValidationRules {
@@ -50,7 +47,7 @@ export const validateSchema = async (
     const errors = await preValidateGraphQLFolder(schemaPath)
     if (errors.length > 0) {
       for (const error of errors) {
-        console.log(error)
+        console.error(error)
       }
     }
 
