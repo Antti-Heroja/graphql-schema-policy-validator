@@ -1,0 +1,6 @@
+type Query {
+  hello: String!
+  user(id: ID!): String
+  numbers: [Int!]!
+  active: Boolean!
+}
