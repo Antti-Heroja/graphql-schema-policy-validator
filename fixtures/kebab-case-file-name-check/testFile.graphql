@@ -1,0 +1,33 @@
+# Root subscription type for real-time updates
+type Subscription {
+  # Notifies when a new message is posted
+  messageAdded(channelId: ID!): Message!
+}
+
+# Root query type for fetching data
+type Query {
+  # Get a message by its ID
+  message(id: ID!): Message
+  # Get all messages in a channel
+  messages(channelId: ID!): [Message!]!
+}
+
+# Root mutation type for modifying data
+type Mutation {
+  # Add a new message to a channel
+  addMessage(channelId: ID!, content: String!): Message!
+}
+
+# A message in a channel
+type Message {
+  # Unique identifier for the message
+  id: ID!
+  # Message content
+  content: String!
+}
+
+# Input type for message creation
+input MessageInput {
+  channelId: ID!
+  content: String!
+}

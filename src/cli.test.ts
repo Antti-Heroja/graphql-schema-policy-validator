@@ -23,7 +23,7 @@ const runCLI = (
 
 test('validates validSchema with all rules enabled (should pass)', () => {
   const schemaPath = `${FIXTURE_BASE}/full-valid-schema`
-  const configPath = `${FIXTURE_BASE}/full-valid-schema/test-validation-rule-config.json`
+  const configPath = `${FIXTURE_BASE}/test-validation-rule-config-all-true.json`
 
   const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
 
@@ -54,7 +54,7 @@ test('validates validSchema with all rules enabled (should pass)', () => {
 
 test('detects duplicate types across schema files (should fail)', () => {
   const schemaPath = `${FIXTURE_BASE}/check-duplicates`
-  const configPath = `${FIXTURE_BASE}/test-validation-rule-config.json`
+  const configPath = `${FIXTURE_BASE}/test-validation-rule-config-all-false.json`
 
   const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
 
@@ -68,7 +68,7 @@ test('detects duplicate types across schema files (should fail)', () => {
 
 test('detects empty files across schema files (should fail)', () => {
   const schemaPath = `${FIXTURE_BASE}/check-empty-files`
-  const configPath = `${FIXTURE_BASE}/test-validation-rule-config.json`
+  const configPath = `${FIXTURE_BASE}/test-validation-rule-config-all-false.json`
 
   const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
 
@@ -78,4 +78,38 @@ test('detects empty files across schema files (should fail)', () => {
   expect(stdout).toContain('✅ Schema loaded successfully')
   expect(stdout).toContain('✅ Documentation validation passed')
   expect(exitCode).toBe(0)
+})
+
+test('should detect invalid kebab-case file names and extensions in schema files', () => {
+  const schemaPath = `${FIXTURE_BASE}/kebab-case-file-name-check`
+  const configPath = `${FIXTURE_BASE}/test-validation-rule-config-all-false.json`
+
+  const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
+
+  expect(stderr).toContain(
+    '❌ Invalid file name: testFile.graphql (must be kebab-case or a single lowercase word)',
+  )
+  expect(stderr).toContain(
+    '❌ Invalid file name: test_schema.graphql (must be kebab-case or a single lowercase word)',
+  )
+  expect(stdout).toContain('✅ Schema loaded successfully')
+  expect(stdout).toContain('✅ Documentation validation passed')
+  expect(exitCode).toBe(0)
+})
+
+test('should detect all missing Documentation', () => {
+  const expectedOutput = `❌ Documentation validation failed:
+  - Type: Query is missing description from row → 1
+  - Field: "Query.hello" is missing description from row → 2
+  - Field: "Query.user" is missing description from row → 3
+  - Field: "Query.numbers" is missing description from row → 4
+  - Field: "Query.active" is missing description from row → 5
+`
+  const schemaPath = `${FIXTURE_BASE}/documentation-rule`
+  const configPath = `${FIXTURE_BASE}/test-validation-documentation-rule.json`
+
+  const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
+  expect(stderr).toBe(expectedOutput)
+  expect(stdout).toContain('✅ Schema loaded successfully')
+  expect(exitCode).toBe(1)
 })

@@ -1,0 +1,14 @@
+# Channel information
+type Channel {
+  # Unique identifier for the channel
+  id: ID!
+  # Channel name
+  name: String!
+}
+
+# Available message types
+enum MessageType {
+  TEXT
+  IMAGE
+  VIDEO
+}
