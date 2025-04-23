@@ -113,3 +113,19 @@ test('should detect all missing Documentation', () => {
   expect(stdout).toContain('✅ Schema loaded successfully')
   expect(exitCode).toBe(1)
 })
+
+test('should detect invalid input-suffix file names and extensions in schema files', () => {
+  const schemaPath = `${FIXTURE_BASE}/input-suffix`
+  const configPath = `${FIXTURE_BASE}/test-validation-input-suffix-rule.json`
+
+  const { stdout, stderr, exitCode } = runCLI([schemaPath, configPath])
+
+  expect(stderr).toContain(
+    '❌ Documentation validation failed:\n  - ❌ Input type "User" must end with "Input" (Line: 1)\n',
+  )
+
+  expect(stdout).toContain('✅ Schema loaded successfully')
+  expect(stdout).toContain('Ensuring all `input` types have the "Input" suffix')
+
+  expect(exitCode).toBe(1)
+})

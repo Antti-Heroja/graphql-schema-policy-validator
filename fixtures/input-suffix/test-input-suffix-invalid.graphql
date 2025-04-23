@@ -1,0 +1,12 @@
+input User {
+  name: String!
+  email: String!
+}
+
+input ProfileInput {
+  bio: String
+}
+
+type Query {
+  user: String
+}
